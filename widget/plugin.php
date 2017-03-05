@@ -11,9 +11,9 @@
  * @copyright 2014 Your Name or Company Name
  *
  * @wordpress-plugin
- * Plugin Name:       pluginwidgetname_NS
- * Plugin URI:        pluginwidgetname_NS
- * Description:       pluginwidgetname_NS_description
+ * Plugin Name:       pluginwidgetname_INITIALS
+ * Plugin URI:        pluginwidgetname_INITIALS
+ * Description:       pluginwidgetname_INITIALS_description
  * Version:           1.0.0
  * Author:            NOAH_SHUTTY
  * Author URI:        @TODO
@@ -42,7 +42,7 @@ $client = new Client($sid, $token);
 
 
 // Can change 'Widget_Test_Name' to the name of your plugin
-class Widget_Test_Name_NS extends WP_Widget {
+class Widget_Test_Name_INITIALS extends WP_Widget {
 
     /**
      * @TODO - Rename "widget-name" to the name your your widget
@@ -80,7 +80,7 @@ class Widget_Test_Name_NS extends WP_Widget {
 		// TODO: update description
 		parent::__construct(
 			$this->get_widget_slug(),
-			__( 'BananaNotifyWidget_NS', $this->get_widget_slug() ),
+			__( 'BananaNotifyWidget_INITIALS', $this->get_widget_slug() ),
 			array(
 				'classname'  => $this->get_widget_slug().'-class',
 				'description' => __( 'Short description of the widget goes here.', $this->get_widget_slug() )
@@ -272,7 +272,7 @@ class Widget_Test_Name_NS extends WP_Widget {
 } // end class
 
 // TODO: Remember to change 'Widget_Test_Name' to match the class name definition
-add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_Name_NS");' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_Name_INITIALS");' ) );
 
 
 
