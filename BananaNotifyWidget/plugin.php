@@ -11,9 +11,9 @@
  * @copyright 2014 Your Name or Company Name
  *
  * @wordpress-plugin
- * Plugin Name:       pluginwidgetname_SUFFIX
- * Plugin URI:        pluginwidgetname_SUFFIX
- * Description:       pluginwidgetname_SUFFIX_description
+ * Plugin Name:       pluginwidgetname_bananas
+ * Plugin URI:        pluginwidgetname_bananas
+ * Description:       pluginwidgetname_bananas_description
  * Version:           1.0.0
  * Author:            NOAH_SHUTTY
  * Author URI:        @TODO
@@ -31,7 +31,7 @@ if ( ! defined ( 'ABSPATH' ) ) {
 
 
 // Can change 'Widget_Test_Name' to the name of your plugin
-class Widget_Test_Name_SUFFIX extends WP_Widget {
+class Widget_Test_Name_bananas extends WP_Widget {
 
     /**
      * @TODO - Rename "widget-name" to the name your your widget
@@ -47,7 +47,7 @@ class Widget_Test_Name_SUFFIX extends WP_Widget {
      *
      * @var      string
      */
-    protected $widget_slug = 'widgetname';
+    protected $widget_slug = 'widgetname_bananas';
 
 	/*--------------------------------------------------*/
 	/* Constructor
@@ -69,7 +69,7 @@ class Widget_Test_Name_SUFFIX extends WP_Widget {
 		// TODO: update description
 		parent::__construct(
 			$this->get_widget_slug(),
-			__( 'BananaNotifyWidget_SUFFIX', $this->get_widget_slug() ),
+			__( 'BananaNotifyWidget_bananas', $this->get_widget_slug() ),
 			array(
 				'classname'  => $this->get_widget_slug().'-class',
 				'description' => __( 'Short description of the widget goes here.', $this->get_widget_slug() )
@@ -261,7 +261,7 @@ class Widget_Test_Name_SUFFIX extends WP_Widget {
 } // end class
 
 // TODO: Remember to change 'Widget_Test_Name' to match the class name definition
-add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_Name_SUFFIX");' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_Name_bananas");' ) );
 
 
 
