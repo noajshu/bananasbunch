@@ -18,3 +18,11 @@ Bananas wordpress plugin for scheduling &amp; reminders
 - Go back to plugins page and click Add New / Upload Plugin
 - Click Choose File and upload the BananaNotifyWidget.zip provided
 - It should say "plugin installed successfully" --> now click "Activate Plugin"
+
+- Click Appearance -> Widgets
+- Drag BananaNotifyWidget_bananas into the Widgets for Shortcodes bar on the right side of the screen
+- Click Save
+
+- Click Pages -> click on the page you want to edit / create a new page
+- Activate Text edit mode by clicking the "Text" tab in the upper right of the editor
+- Insert the widget by entering this into your page: [do_widget "BananaNotifyWidget_bananas"]
