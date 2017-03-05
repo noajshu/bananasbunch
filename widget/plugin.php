@@ -276,61 +276,63 @@ add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_N
 
 
 
-// backend long-running cron jobs
+// // backend long-running cron jobs
 
-// boilerplate to add smaller time intervals
-function my_cron_schedules($schedules){
-	if(!isset($schedules["1min"])){
-        $schedules["1min"] = array(
-            'interval' => 1*60,
-            'display' => __('Once every 1 minutes'));
-    }
-    if(!isset($schedules["5min"])){
-        $schedules["5min"] = array(
-            'interval' => 5*60,
-            'display' => __('Once every 5 minutes'));
-    }
-    if(!isset($schedules["30min"])){
-        $schedules["30min"] = array(
-            'interval' => 30*60,
-            'display' => __('Once every 30 minutes'));
-    }
-    return $schedules;
-}
-add_filter('cron_schedules','my_cron_schedules');
+// // boilerplate to add smaller time intervals
+// function my_cron_schedules($schedules){
+// 	if(!isset($schedules["1min"])){
+//         $schedules["1min"] = array(
+//             'interval' => 1*60,
+//             'display' => __('Once every 1 minutes'));
+//     }
+//     if(!isset($schedules["5min"])){
+//         $schedules["5min"] = array(
+//             'interval' => 5*60,
+//             'display' => __('Once every 5 minutes'));
+//     }
+//     if(!isset($schedules["30min"])){
+//         $schedules["30min"] = array(
+//             'interval' => 30*60,
+//             'display' => __('Once every 30 minutes'));
+//     }
+//     return $schedules;
+// }
+// add_filter('cron_schedules','my_cron_schedules');
 
-register_activation_hook(__FILE__, 'my_activation');
+// register_activation_hook(__FILE__, 'my_activation');
 
-function my_activation() {
-    if (! wp_next_scheduled ( 'my_recurring_event' )) {
-		wp_schedule_event(time(), '1min', 'my_recurring_event');
-    }
-}
+// function my_activation() {
+//     if (! wp_next_scheduled ( 'my_recurring_event' )) {
+// 		wp_schedule_event(time(), '1min', 'my_recurring_event');
+//     }
+// }
 
-add_action('my_recurring_event', 'do_this_on_event');
+// add_action('my_recurring_event', 'do_this_on_event');
 
-function do_this_on_event() {
-	// do something every time the recurring event hits
-	// IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
-	// this is the actual thing that will happen every interval
+// function do_this_on_event() {
+// 	// do something every time the recurring event hits
+// 	// IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
+// 	// this is the actual thing that will happen every interval
 
-	// Use the twilio client to send a text to Noah
-	$client->messages->create(
-	    // the number you'd like to send the message to
-	    '+12485203071',
-	    array(
-	        // A Twilio phone number you purchased at twilio.com/console
-	        'from' => '+19253784063',
-	        // the body of the text message you'd like to send
-	        'body' => "Hey Noah! Good luck at Social ImpHacked!"
-	    )
-	);
+// 	// Use the twilio client to send a text to Noah
+// 	$client->messages->create(
+// 	    // the number you'd like to send the message to
+// 	    '+12485203071',
+// 	    array(
+// 	        // A Twilio phone number you purchased at twilio.com/console
+// 	        'from' => '+19253784063',
+// 	        // the body of the text message you'd like to send
+// 	        'body' => "Hey Noah! Good luck at Social ImpHacked!"
+// 	    )
+// 	);
 
-	// IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
-}
+// 	$response = file_get_contents("http://curl.to/noajshu/curlto+hello+every+1min+from+bananas");
 
-// these clean up the loop when this plug in is deregistered
-register_deactivation_hook(__FILE__, 'my_deactivation');
-function my_deactivation() {
-	wp_clear_scheduled_hook('my_recurring_event');
-}
+// 	// IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
+// }
+
+// // these clean up the loop when this plug in is deregistered
+// register_deactivation_hook(__FILE__, 'my_deactivation');
+// function my_deactivation() {
+// 	wp_clear_scheduled_hook('my_recurring_event');
+// }
