@@ -146,6 +146,36 @@ class Widget_Test_Name_bananas extends WP_Widget {
 
         wp_cache_set( $this->get_widget_slug(), $cache, 'widget' );
 
+        /*
+     	  * Inserts form data to wordpress table. TODO: Uncomment DB logic
+     	  */
+     		// if(isset($_POST["create_appointment"])) { // create_appointment will be the name of the input field/button. ALSO, check that the form is valid? Can form validation happen just on the front end?
+         //   $table = $wpdb->prefix.'OUR_TABLE';
+         //   $client_name = strip_tags($_POST["client_name"]);
+         //   // ... continue for all form elements
+         //   $wpdb->insert(
+         //     $table,
+         //     array(
+         //       'client_name' => $client_name
+         //     )
+         //   )
+         // }
+
+
+         if(isset($_POST["create_appointment"]) && $_POST["client_name"] != "") {
+           $client_name = $_POST["client_name"];
+           // ... continue for all form element
+
+           $args = array(
+         	    'number_to' => '+12485203071',
+         	    'message' => $client_name,
+         	);
+         	twl_send_sms($args);
+           $html = "<p>Your appointment with <strong>$client_name</strong> was successfully created. Thanks!!</p>";
+         }
+
+     		print $widget_string;
+
         print $widget_string;
 
     } // end widget
