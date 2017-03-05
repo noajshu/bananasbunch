@@ -296,12 +296,6 @@ function banana_activation() {
         wp_schedule_event(time(), '1min', 'banana_recurring_event');
     }
 
-    $args = array(
-        'number_to' => '+12485203071',
-        'message' => 'WP banana plugin activated',
-    );
-    twl_send_sms($args);
-
     global $wpdb;
     $installed_ver = get_option( "banana_db_version" );
 
@@ -367,13 +361,24 @@ function do_this_on_event() {
     // do something every time the recurring event hits
     // IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
     // this is the actual thing that will happen every interval
+    global $wpdb;
+    
+    // get appointments
+    $apptTable = $wpdb->prefix . 'appointment';
+    $apptQuery = "SELECT * FROM $apptTable WHERE (time > adddate(now(), 1) AND time < adddate(now(), 2))";
+    $appts = $wpdb->get_results($apptQuery);
+    foreach ( $appts as $appt ) {
 
-    // Use the twilio client to send a text to Noah
-    $args = array(
-        'number_to' => '+12485203071',
-        'message' => 'Notify every 1 min',
-    );
-    twl_send_sms($args);
+        $number = $appt->client_phone;
+        $name = $appt->client_first_name;
+
+        // Use the twilio client to send a text to the parent
+        $args = array(
+            'number_to' => $number,
+            'message' => "Hey $name, you have an appointment tomorrow",
+        );
+        twl_send_sms($args);
+    }
 
     // IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
 }
@@ -382,9 +387,5 @@ function do_this_on_event() {
 register_deactivation_hook(__FILE__, 'my_deactivation');
 function my_deactivation() {
     wp_clear_scheduled_hook('banana_recurring_event');
-    $args = array(
-        'number_to' => '+12485203071',
-        'message' => 'WP banana plugin deactivated',
-    );
-    twl_send_sms($args);
 }
+
