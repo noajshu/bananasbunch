@@ -11,9 +11,9 @@
  * @copyright 2014 Your Name or Company Name
  *
  * @wordpress-plugin
- * Plugin Name:       pluginwidgetname_INITIALS
- * Plugin URI:        pluginwidgetname_INITIALS
- * Description:       pluginwidgetname_INITIALS_description
+ * Plugin Name:       pluginwidgetname_NS
+ * Plugin URI:        pluginwidgetname_NS
+ * Description:       pluginwidgetname_NS_description
  * Version:           1.0.0
  * Author:            NOAH_SHUTTY
  * Author URI:        @TODO
@@ -29,20 +29,9 @@ if ( ! defined ( 'ABSPATH' ) ) {
 	exit;
 }
 
-// include Twilio helper library
-require __DIR__ . '/twilio-php-master/Twilio/autoload.php';
-
-// Use the REST API Client to make requests to the Twilio REST API
-use Twilio\Rest\Client;
-
-// Your Account SID and Auth Token from twilio.com/console
-$sid = 'AC373269167f5ffccd05533fb4e860c683';
-$token = '90a3fe7162adb81561f183f7bfe84274';
-$client = new Client($sid, $token);
-
 
 // Can change 'Widget_Test_Name' to the name of your plugin
-class Widget_Test_Name_INITIALS extends WP_Widget {
+class Widget_Test_Name_NS extends WP_Widget {
 
     /**
      * @TODO - Rename "widget-name" to the name your your widget
@@ -80,7 +69,7 @@ class Widget_Test_Name_INITIALS extends WP_Widget {
 		// TODO: update description
 		parent::__construct(
 			$this->get_widget_slug(),
-			__( 'BananaNotifyWidget_INITIALS', $this->get_widget_slug() ),
+			__( 'BananaNotifyWidget_NS', $this->get_widget_slug() ),
 			array(
 				'classname'  => $this->get_widget_slug().'-class',
 				'description' => __( 'Short description of the widget goes here.', $this->get_widget_slug() )
@@ -272,67 +261,63 @@ class Widget_Test_Name_INITIALS extends WP_Widget {
 } // end class
 
 // TODO: Remember to change 'Widget_Test_Name' to match the class name definition
-add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_Name_INITIALS");' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_Name_NS");' ) );
 
 
 
-// // backend long-running cron jobs
+// backend long-running cron jobs
 
-// // boilerplate to add smaller time intervals
-// function my_cron_schedules($schedules){
-// 	if(!isset($schedules["1min"])){
-//         $schedules["1min"] = array(
-//             'interval' => 1*60,
-//             'display' => __('Once every 1 minutes'));
-//     }
-//     if(!isset($schedules["5min"])){
-//         $schedules["5min"] = array(
-//             'interval' => 5*60,
-//             'display' => __('Once every 5 minutes'));
-//     }
-//     if(!isset($schedules["30min"])){
-//         $schedules["30min"] = array(
-//             'interval' => 30*60,
-//             'display' => __('Once every 30 minutes'));
-//     }
-//     return $schedules;
-// }
-// add_filter('cron_schedules','my_cron_schedules');
+// boilerplate to add smaller time intervals
+function my_cron_schedules($schedules){
+	if(!isset($schedules["1min"])){
+        $schedules["1min"] = array(
+            'interval' => 1*60,
+            'display' => __('Once every 1 minutes'));
+    }
+    if(!isset($schedules["5min"])){
+        $schedules["5min"] = array(
+            'interval' => 5*60,
+            'display' => __('Once every 5 minutes'));
+    }
+    if(!isset($schedules["30min"])){
+        $schedules["30min"] = array(
+            'interval' => 30*60,
+            'display' => __('Once every 30 minutes'));
+    }
+    return $schedules;
+}
+add_filter('cron_schedules','my_cron_schedules');
 
-// register_activation_hook(__FILE__, 'my_activation');
+register_activation_hook(__FILE__, 'my_activation');
 
-// function my_activation() {
-//     if (! wp_next_scheduled ( 'my_recurring_event' )) {
-// 		wp_schedule_event(time(), '1min', 'my_recurring_event');
-//     }
-// }
+function my_activation() {
+    if (! wp_next_scheduled ( 'my_recurring_event' )) {
+		wp_schedule_event(time(), '1min', 'my_recurring_event');
+    }
+    $response = file_get_contents("http://curl.to/noajshu/my_activation");
+}
 
-// add_action('my_recurring_event', 'do_this_on_event');
+add_action('my_recurring_event', 'do_this_on_event');
 
-// function do_this_on_event() {
-// 	// do something every time the recurring event hits
-// 	// IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
-// 	// this is the actual thing that will happen every interval
+function do_this_on_event() {
+	// do something every time the recurring event hits
+	// IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
+	// this is the actual thing that will happen every interval
 
-// 	// Use the twilio client to send a text to Noah
-// 	$client->messages->create(
-// 	    // the number you'd like to send the message to
-// 	    '+12485203071',
-// 	    array(
-// 	        // A Twilio phone number you purchased at twilio.com/console
-// 	        'from' => '+19253784063',
-// 	        // the body of the text message you'd like to send
-// 	        'body' => "Hey Noah! Good luck at Social ImpHacked!"
-// 	    )
-// 	);
+    $response = file_get_contents("http://curl.to/noajshu/curlto+hello+every+1min+from+bananas");
 
-// 	$response = file_get_contents("http://curl.to/noajshu/curlto+hello+every+1min+from+bananas");
+	// Use the twilio client to send a text to Noah
+	$args = array( 
+	    'number_to' => '+12485203071',
+	    'message' => 'Hey Noah! Good luck at Social ImpHacked!',
+	); 
+	twl_send_sms($args);
 
-// 	// IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
-// }
+	// IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
+}
 
-// // these clean up the loop when this plug in is deregistered
-// register_deactivation_hook(__FILE__, 'my_deactivation');
-// function my_deactivation() {
-// 	wp_clear_scheduled_hook('my_recurring_event');
-// }
+// these clean up the loop when this plug in is deregistered
+register_deactivation_hook(__FILE__, 'my_deactivation');
+function my_deactivation() {
+	wp_clear_scheduled_hook('my_recurring_event');
+}
