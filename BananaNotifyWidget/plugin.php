@@ -286,9 +286,12 @@ function my_cron_schedules($schedules){
     return $schedules;
 }
 add_filter('cron_schedules','my_cron_schedules');
-register_activation_hook(__FILE__, 'banana_notify_activation');
+register_activation_hook(__FILE__, 'banana_activation');
 
-function banana_notify_activation() {
+global $banana_db_version;
+$banana_db_version = '1.0';
+
+function banana_activation() {
     if (! wp_next_scheduled ( 'banana_recurring_event' )) {
         wp_schedule_event(time(), '1min', 'banana_recurring_event');
     }
@@ -300,9 +303,11 @@ function banana_notify_activation() {
     twl_send_sms($args);
 
     global $wpdb;
-    $installed_ver = get_option( "db_version" );
+    $installed_ver = get_option( "banana_db_version" );
 
-    if ( $installed_ver != $db_version ) {
+    //TODO: Change back to version checking
+    // if ( $installed_ver != $banana_db_version ) {
+    if ( true ) {
 
         $appointment = $wpdb->prefix . 'appointment';
         $counselor = $wpdb->prefix . 'counselor';
@@ -318,12 +323,12 @@ function banana_notify_activation() {
             client_email VARCHAR(255),
             client_phone VARCHAR(40),
             client_language VARCHAR(40) NOT NULL,
-            counselor SMALLINT UNSIGNED NOT NULL REFERENCES $counselor(id)
+            counselor SMALLINT UNSIGNED NOT NULL REFERENCES $counselor(id),
             CONSTRAINT chk_contact CHECK (client_phone IS NOT NULL OR client_email IS NOT NULL)
             );
             ALTER TABLE $appointment ADD INDEX client_phone_index (client_phone);
 
-            CREATE TABLE $couselor (
+            CREATE TABLE $counselor (
             id mediumint(9) NOT NULL AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(128) NOT NULL,
             email VARCHAR(128) NOT NULL,
@@ -351,7 +356,7 @@ function banana_notify_activation() {
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $sql );
 
-        update_option( "db_version", $db_version );
+        update_option( "banana_db_version", $banana_db_version );
     }
 }
 
