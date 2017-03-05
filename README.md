@@ -26,3 +26,5 @@ Bananas wordpress plugin for scheduling &amp; reminders
 - Click Pages -> click on the page you want to edit / create a new page
 - Activate Text edit mode by clicking the "Text" tab in the upper right of the editor
 - Insert the widget by entering this into your page: [do_widget "BananaNotifyWidget_bananas"]
+- Click Update on the right side
+- Click on the permalink to view the page (including the widget!)
