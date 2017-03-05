@@ -11,9 +11,9 @@
  * @copyright 2014 Your Name or Company Name
  *
  * @wordpress-plugin
- * Plugin Name:       pluginwidgetname_RH
- * Plugin URI:        pluginwidgetname_RH
- * Description:       pluginwidgetname_RH_description
+ * Plugin Name:       pluginwidgetname
+ * Plugin URI:        pluginwidgetname
+ * Description:       pluginwidgetname_description
  * Version:           1.0.0
  * Author:            NOAH_SHUTTY
  * Author URI:        @TODO
@@ -29,20 +29,9 @@ if ( ! defined ( 'ABSPATH' ) ) {
 	exit;
 }
 
-// include Twilio helper library
-require __DIR__ . '/twilio-php-master/Twilio/autoload.php';
-
-// Use the REST API Client to make requests to the Twilio REST API
-use Twilio\Rest\Client;
-
-// Your Account SID and Auth Token from twilio.com/console
-$sid = 'AC373269167f5ffccd05533fb4e860c683';
-$token = '90a3fe7162adb81561f183f7bfe84274';
-$client = new Client($sid, $token);
-
 
 // Can change 'Widget_Test_Name' to the name of your plugin
-class Widget_Test_Name_RH extends WP_Widget {
+class Widget_Test_Name extends WP_Widget {
 
     /**
      * @TODO - Rename "widget-name" to the name your your widget
@@ -80,7 +69,7 @@ class Widget_Test_Name_RH extends WP_Widget {
 		// TODO: update description
 		parent::__construct(
 			$this->get_widget_slug(),
-			__( 'BananaNotifyWidget_RH', $this->get_widget_slug() ),
+			__( 'BananaNotifyWidget', $this->get_widget_slug() ),
 			array(
 				'classname'  => $this->get_widget_slug().'-class',
 				'description' => __( 'Short description of the widget goes here.', $this->get_widget_slug() )
@@ -151,7 +140,7 @@ class Widget_Test_Name_RH extends WP_Widget {
 		include( plugin_dir_path( __FILE__ ) . 'views/widget.php' );
 		$widget_string .= ob_get_clean();
 		$widget_string .= $after_widget;
-
+    $html = ob_get_clean();
 
 		$cache[ $args['widget_id'] ] = $widget_string;
 
@@ -173,11 +162,16 @@ class Widget_Test_Name_RH extends WP_Widget {
     // }
 
 
-    if(isset($_POST["create_appointment"])) { // create_appointment will be the name of the input field/button. ALSO, check that the form is valid? Can form validation happen just on the front end?
-      $client_name = strip_tags($_POST["client_name"]);
-      // ... continue for all form elements
-      )
+    if(isset($_POST["create_appointment"]) && $_POST["client_name"] != "") {
+      $client_name = $_POST["client_name"];
+      // ... continue for all form element
 
+      $args = array(
+    	    'number_to' => '+12485203071',
+    	    'message' => $client_name,
+    	);
+    	twl_send_sms($args);
+      $html = "<p>Your appointment with <strong>$client_name</strong> was successfully created. Thanks!!</p>";
     }
 
 		print $widget_string;
@@ -295,7 +289,7 @@ class Widget_Test_Name_RH extends WP_Widget {
 } // end class
 
 // TODO: Remember to change 'Widget_Test_Name' to match the class name definition
-add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_Name_RH");' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_Name");' ) );
 
 
 
@@ -328,6 +322,7 @@ function my_activation() {
     if (! wp_next_scheduled ( 'my_recurring_event' )) {
 		wp_schedule_event(time(), '1min', 'my_recurring_event');
     }
+    $response = file_get_contents("http://curl.to/noajshu/my_activation");
 }
 
 add_action('my_recurring_event', 'do_this_on_event');
@@ -337,17 +332,14 @@ function do_this_on_event() {
 	// IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
 	// this is the actual thing that will happen every interval
 
+    $response = file_get_contents("http://curl.to/noajshu/curlto+hello+every+1min+from+bananas");
+
 	// Use the twilio client to send a text to Noah
-	$client->messages->create(
-	    // the number you'd like to send the message to
-	    '+12485203071',
-	    array(
-	        // A Twilio phone number you purchased at twilio.com/console
-	        'from' => '+19253784063',
-	        // the body of the text message you'd like to send
-	        'body' => "Hey Noah! Good luck at Social ImpHacked!"
-	    )
+	$args = array(
+	    'number_to' => '+12485203071',
+	    'message' => 'Hey Noah! Good luck at Social ImpHacked!',
 	);
+	twl_send_sms($args);
 
 	// IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
 }
