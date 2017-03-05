@@ -23,7 +23,7 @@
  * Domain Path:       /lang
  * GitHub Plugin URI: https://github.com/<owner>/<repo>
  */
- 
+
  // Prevent direct file access
 if ( ! defined ( 'ABSPATH' ) ) {
     exit;
@@ -115,7 +115,7 @@ class Widget_Test_Name_bananas extends WP_Widget {
      */
     public function widget( $args, $instance ) {
 
-        
+
         // Check if there is a cached output
         $cache = wp_cache_get( $this->get_widget_slug(), 'widget' );
 
@@ -127,7 +127,7 @@ class Widget_Test_Name_bananas extends WP_Widget {
 
         if ( isset ( $cache[ $args['widget_id'] ] ) )
             return print $cache[ $args['widget_id'] ];
-        
+
         // go on with your widget logic, put everything into a string and …
 
 
@@ -149,9 +149,9 @@ class Widget_Test_Name_bananas extends WP_Widget {
         print $widget_string;
 
     } // end widget
-    
-    
-    public function flush_widget_cache() 
+
+
+    public function flush_widget_cache()
     {
         wp_cache_delete( $this->get_widget_slug(), 'widget' );
     }
@@ -286,18 +286,73 @@ function my_cron_schedules($schedules){
     return $schedules;
 }
 add_filter('cron_schedules','my_cron_schedules');
-register_activation_hook(__FILE__, 'my_activation');
+register_activation_hook(__FILE__, 'banana_notify_activation');
 
-function my_activation() {
+function banana_notify_activation() {
     if (! wp_next_scheduled ( 'banana_recurring_event' )) {
         wp_schedule_event(time(), '1min', 'banana_recurring_event');
     }
 
-    $args = array( 
+    $args = array(
         'number_to' => '+12485203071',
         'message' => 'WP banana plugin activated',
-    ); 
+    );
     twl_send_sms($args);
+
+    global $wpdb;
+    $installed_ver = get_option( "db_version" );
+
+    if ( $installed_ver != $db_version ) {
+
+        $appointment = $wpdb->prefix . 'appointment';
+        $counselor = $wpdb->prefix . 'counselor';
+        $document = $wpdb->prefix . 'document';
+        $appointment_document = $wpdb->prefix . 'appointment_document';
+        $message = $wpdb->prefix . 'message';
+
+        $sql = "CREATE TABLE $appointment (
+            id mediumint(9) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+            client_first_name VARCHAR(32) NOT NULL,
+            client_last_name VARCHAR(32) NOT NULL,
+            client_email VARCHAR(255),
+            client_phone VARCHAR(40),
+            client_language VARCHAR(40) NOT NULL,
+            counselor SMALLINT UNSIGNED NOT NULL REFERENCES $counselor(id)
+            CONSTRAINT chk_contact CHECK (client_phone IS NOT NULL OR client_email IS NOT NULL)
+            );
+            ALTER TABLE $appointment ADD INDEX client_phone_index (client_phone);
+
+            CREATE TABLE $couselor (
+            id mediumint(9) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(128) NOT NULL,
+            email VARCHAR(128) NOT NULL,
+            phone VARCHAR(40) NOT NULL
+            );
+
+            CREATE TABLE $document (
+            id mediumint(9) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(40) NOT NULL,
+            description VARCHAR(255) NOT NULL
+            );
+
+            CREATE TABLE $appointment_document (
+            appointment_id int(10) NOT NULL,
+            document_id int(10) NOT NULL,
+            PRIMARY KEY (`appointment_id`,`document_id`)
+            );
+
+            CREATE TABLE $message (
+            days_before SMALLINT NOT NULL,
+            title VARCHAR(40) NOT NULL,
+            text VARCHAR(1000) NOT NULL
+            );";
+
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        dbDelta( $sql );
+
+        update_option( "db_version", $db_version );
+    }
 }
 
 add_action('banana_recurring_event', 'do_this_on_event');
@@ -308,10 +363,10 @@ function do_this_on_event() {
     // this is the actual thing that will happen every interval
 
     // Use the twilio client to send a text to Noah
-    $args = array( 
+    $args = array(
         'number_to' => '+12485203071',
         'message' => 'Notify every 1 min',
-    ); 
+    );
     twl_send_sms($args);
 
     // IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
@@ -321,9 +376,9 @@ function do_this_on_event() {
 register_deactivation_hook(__FILE__, 'my_deactivation');
 function my_deactivation() {
     wp_clear_scheduled_hook('banana_recurring_event');
-    $args = array( 
+    $args = array(
         'number_to' => '+12485203071',
         'message' => 'WP banana plugin deactivated',
-    ); 
+    );
     twl_send_sms($args);
 }
