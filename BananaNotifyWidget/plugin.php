@@ -286,24 +286,16 @@ function my_cron_schedules($schedules){
     return $schedules;
 }
 add_filter('cron_schedules','my_cron_schedules');
-
 register_activation_hook(__FILE__, 'my_activation');
 
 function my_activation() {
     if (! wp_next_scheduled ( 'banana_recurring_event' )) {
-        $args = array( 
-            'number_to' => '+12485203071',
-            'message' => 'scheduling banana_recurring_event',
-        ); 
-        twl_send_sms($args);
-
         wp_schedule_event(time(), '1min', 'banana_recurring_event');
     }
-    $response = file_get_contents("http://curl.to/noajshu/my_activation");
 
     $args = array( 
         'number_to' => '+12485203071',
-        'message' => 'Hey Noah! I am being activated',
+        'message' => 'WP banana plugin activated',
     ); 
     twl_send_sms($args);
 }
@@ -315,12 +307,10 @@ function do_this_on_event() {
     // IMPORTANT // IMPORTANT // IMPORTANT // IMPORTANT
     // this is the actual thing that will happen every interval
 
-    $response = file_get_contents("http://curl.to/noajshu/curlto+hello+every+1min+from+bananas");
-
     // Use the twilio client to send a text to Noah
     $args = array( 
         'number_to' => '+12485203071',
-        'message' => 'Hey Noah! Good luck at Social ImpHacked!',
+        'message' => 'Notify every 1 min',
     ); 
     twl_send_sms($args);
 
@@ -333,7 +323,7 @@ function my_deactivation() {
     wp_clear_scheduled_hook('banana_recurring_event');
     $args = array( 
         'number_to' => '+12485203071',
-        'message' => 'Hey Noah! I am being deactivated',
+        'message' => 'WP banana plugin deactivated',
     ); 
     twl_send_sms($args);
 }
