@@ -318,19 +318,20 @@ function banana_activation() {
         $sql = "CREATE TABLE $appointment (
             id mediumint(9) NOT NULL AUTO_INCREMENT PRIMARY KEY,
             time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-            client_first_name VARCHAR(32) NOT NULL,
-            client_last_name VARCHAR(32) NOT NULL,
-            client_email VARCHAR(255),
-            client_phone VARCHAR(40),
-            client_language VARCHAR(40) NOT NULL,
+            first_name VARCHAR(32) NOT NULL,
+            last_name VARCHAR(32) NOT NULL,
+            email VARCHAR(255),
+            phone VARCHAR(40),
+            language VARCHAR(40) NOT NULL,
             counselor SMALLINT UNSIGNED NOT NULL REFERENCES $counselor(id),
-            CONSTRAINT chk_contact CHECK (client_phone IS NOT NULL OR client_email IS NOT NULL)
+            CONSTRAINT chk_contact CHECK (phone IS NOT NULL OR email IS NOT NULL)
             );
-            ALTER TABLE $appointment ADD INDEX client_phone_index (client_phone);
+            ALTER TABLE $appointment ADD INDEX phone_index (phone);
 
             CREATE TABLE $counselor (
             id mediumint(9) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(128) NOT NULL,
+            first_name VARCHAR(32) NOT NULL,
+            last_name VARCHAR(32) NOT NULL,
             email VARCHAR(128) NOT NULL,
             phone VARCHAR(40) NOT NULL
             );
