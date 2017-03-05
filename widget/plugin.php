@@ -11,9 +11,9 @@
  * @copyright 2014 Your Name or Company Name
  *
  * @wordpress-plugin
- * Plugin Name:       pluginwidgetname_NS
- * Plugin URI:        pluginwidgetname_NS
- * Description:       pluginwidgetname_NS_description
+ * Plugin Name:       pluginwidgetname_RH
+ * Plugin URI:        pluginwidgetname_RH
+ * Description:       pluginwidgetname_RH_description
  * Version:           1.0.0
  * Author:            NOAH_SHUTTY
  * Author URI:        @TODO
@@ -23,7 +23,7 @@
  * Domain Path:       /lang
  * GitHub Plugin URI: https://github.com/<owner>/<repo>
  */
- 
+
  // Prevent direct file access
 if ( ! defined ( 'ABSPATH' ) ) {
 	exit;
@@ -42,7 +42,7 @@ $client = new Client($sid, $token);
 
 
 // Can change 'Widget_Test_Name' to the name of your plugin
-class Widget_Test_Name_NS extends WP_Widget {
+class Widget_Test_Name_RH extends WP_Widget {
 
     /**
      * @TODO - Rename "widget-name" to the name your your widget
@@ -80,7 +80,7 @@ class Widget_Test_Name_NS extends WP_Widget {
 		// TODO: update description
 		parent::__construct(
 			$this->get_widget_slug(),
-			__( 'BananaNotifyWidget_NS', $this->get_widget_slug() ),
+			__( 'BananaNotifyWidget_RH', $this->get_widget_slug() ),
 			array(
 				'classname'  => $this->get_widget_slug().'-class',
 				'description' => __( 'Short description of the widget goes here.', $this->get_widget_slug() )
@@ -126,7 +126,7 @@ class Widget_Test_Name_NS extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 
-		
+
 		// Check if there is a cached output
 		$cache = wp_cache_get( $this->get_widget_slug(), 'widget' );
 
@@ -138,7 +138,7 @@ class Widget_Test_Name_NS extends WP_Widget {
 
 		if ( isset ( $cache[ $args['widget_id'] ] ) )
 			return print $cache[ $args['widget_id'] ];
-		
+
 		// go on with your widget logic, put everything into a string and …
 
 
@@ -157,12 +157,35 @@ class Widget_Test_Name_NS extends WP_Widget {
 
 		wp_cache_set( $this->get_widget_slug(), $cache, 'widget' );
 
+   /*
+	  * Inserts form data to wordpress table. TODO: Uncomment DB logic
+	  */
+		// if(isset($_POST["create_appointment"])) { // create_appointment will be the name of the input field/button. ALSO, check that the form is valid? Can form validation happen just on the front end?
+    //   $table = $wpdb->prefix.'OUR_TABLE';
+    //   $client_name = strip_tags($_POST["client_name"]);
+    //   // ... continue for all form elements
+    //   $wpdb->insert(
+    //     $table,
+    //     array(
+    //       'client_name' => $client_name
+    //     )
+    //   )
+    // }
+
+
+    if(isset($_POST["create_appointment"])) { // create_appointment will be the name of the input field/button. ALSO, check that the form is valid? Can form validation happen just on the front end?
+      $client_name = strip_tags($_POST["client_name"]);
+      // ... continue for all form elements
+      )
+
+    }
+
 		print $widget_string;
 
 	} // end widget
-	
-	
-	public function flush_widget_cache() 
+
+
+	public function flush_widget_cache()
 	{
     	wp_cache_delete( $this->get_widget_slug(), 'widget' );
 	}
@@ -272,7 +295,7 @@ class Widget_Test_Name_NS extends WP_Widget {
 } // end class
 
 // TODO: Remember to change 'Widget_Test_Name' to match the class name definition
-add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_Name_NS");' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget("Widget_Test_Name_RH");' ) );
 
 
 
